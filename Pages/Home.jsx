@@ -53,9 +53,9 @@ const Home = () => {
       {/* Desktop Navigation & Icons */}
       <div className="hidden md:flex items-center space-x-6 order-3">
         <NavLink to="/">Home</NavLink>
-        <NavLink to="/shop">Shop</NavLink>
-        <NavLink to="/deals">Deals</NavLink>
-        <NavLink to="/about">About</NavLink>
+        <NavLink to="/oder">Oders</NavLink>
+        <NavLink to="/wishlist">Wishlist</NavLink>
+
       </div>
 
       {/* Right Icons - Desktop */}
