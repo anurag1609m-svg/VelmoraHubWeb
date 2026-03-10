@@ -14,11 +14,11 @@ const Home = () => {
     <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 py-3 md:py-0 md:h-24">
 
       {/* Logo - Left with BIG Size */}
- <Link to="/" className="flex items-center -ml-4">
+    <Link to="/" className="flex items-center -ml-8">
   <img
-    src="/Logo.png"
+    src="/Logo.jpg"
     alt="Velmora Hub"
-    className="h-36 sm:h-44 md:h-48 lg:h-52 w-auto object-contain"
+    className="h-28 sm:h-32 md:h-36 lg:h-20 w-auto object-contain"
   />
 </Link>
 
