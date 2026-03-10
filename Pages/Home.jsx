@@ -1,125 +1,135 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const token = sessionStorage.getItem("token");
+  const [categories, setCategories] = useState([]);
+  const cateurl = "https://velmorahub.onrender.com/api/categories/getall";
+
+  useEffect(() => {
+    axios.get(cateurl)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar - Fully Responsive with Logo */}
-      {/* Navbar - Fully Responsive with Big Logo */}
-<nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm mt-1 md:mt-0">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 py-3 md:py-0 md:h-24">
+      {/* Navbar */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm mt-1 md:mt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 py-3 md:py-0 md:h-24">
 
-      {/* Logo - Left with BIG Size */}
- <Link to="/" className="flex items-center -ml-4">
-  <img
-    src="/Logo.png"
-    alt="Velmora Hub"
-    className="h-36 sm:h-44 md:h-48 lg:h-52 w-auto object-contain"
-  />
-</Link>
+            {/* Logo */}
+            <Link to="/" className="flex items-center -ml-4">
+              <img
+                src="/Logo.png"
+                alt="Velmora Hub"
+                className="h-36 sm:h-44 md:h-48 lg:h-52 w-auto object-contain"
+              />
+            </Link>
 
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden order-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden order-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+
+            {/* Search Bar */}
+            <div className="w-full md:flex-1 md:max-w-2xl order-4 md:order-2 mt-3 md:mt-0">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  className="w-full px-4 sm:px-5 py-2.5 text-sm sm:text-base border border-gray-300 rounded-full focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 transition-all duration-300"
+                />
+                <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-yellow-500 text-white px-4 sm:px-6 py-1.5 text-sm sm:text-base rounded-full hover:bg-yellow-600 transition-colors duration-300 font-medium">
+                  Search
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-6 order-3">
+              <NavLink to="/">Home</NavLink>
+              <NavLink to="/orders">Orders</NavLink>
+              <NavLink to="/wishlist">Wishlist</NavLink>
+            </div>
+
+            {/* Desktop Right Icons */}
+            <div className="hidden md:flex items-center space-x-4 order-4">
+              <Link to="/cart" className="relative p-2 text-gray-700 hover:text-yellow-500 transition-colors group">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  3
+                </span>
+              </Link>
+
+              {!token ? (
+                <Link to="/login" className="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-5 py-2 text-sm rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                  Login
+                </Link>
+              ) : (
+                <Link to="/profile" className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-5 py-2 text-sm rounded-full hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                  Profile
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Icons */}
+            <div className="flex md:hidden items-center space-x-3 order-2">
+              <Link to="/cart" className="relative p-1.5 text-gray-700">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-3.5 h-3.5 flex items-center justify-center">
+                  3
+                </span>
+              </Link>
+              {!token ? (
+                <Link to="/login" className="bg-gray-900 text-white px-3 py-1.5 text-xs rounded-full">
+                  Login
+                </Link>
+              ) : (
+                <Link to="/profile" className="bg-yellow-500 text-white px-3 py-1.5 text-xs rounded-full">
+                  Profile
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 border-t border-gray-200 animate-slideDown">
+              <div className="flex flex-col space-y-2">
+                <MobileNavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</MobileNavLink>
+                <MobileNavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart</MobileNavLink>
+                <MobileNavLink to="/orders" onClick={() => setIsMenuOpen(false)}>Orders</MobileNavLink>
+                <MobileNavLink to="/wishlist" onClick={() => setIsMenuOpen(false)}>Wishlist</MobileNavLink>
+              </div>
+            </div>
           )}
-        </svg>
-      </button>
-
-      {/* Search Bar */}
-      <div className="w-full md:flex-1 md:max-w-2xl order-4 md:order-2 mt-3 md:mt-0">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search for products..."
-            className="w-full px-4 sm:px-5 py-2.5 text-sm sm:text-base border border-gray-300 rounded-full focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 transition-all duration-300"
-          />
-          <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-yellow-500 text-white px-4 sm:px-6 py-1.5 text-sm sm:text-base rounded-full hover:bg-yellow-600 transition-colors duration-300 font-medium">
-            Search
-          </button>
         </div>
-      </div>
-
-      {/* Desktop Navigation & Icons */}
-      <div className="hidden md:flex items-center space-x-6 order-3">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/oder">Oders</NavLink>
-        <NavLink to="/wishlist">Wishlist</NavLink>
-
-      </div>
-
-      {/* Right Icons - Desktop */}
-      <div className="hidden md:flex items-center space-x-4 order-4">
-        <Link to="/cart" className="relative p-2 text-gray-700 hover:text-yellow-500 transition-colors group">
-          <svg className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-          <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
-            3
-          </span>
-        </Link>
-
-        {!token ? (
-          <Link to="/login" className="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-5 py-2 text-sm rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
-            Login
-          </Link>
-        ) : (
-          <Link to="/profile" className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-5 py-2 text-sm rounded-full hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
-            Profile
-          </Link>
-        )}
-      </div>
-
-      {/* Mobile Icons */}
-      <div className="flex md:hidden items-center space-x-3 order-2">
-        <Link to="/cart" className="relative p-1.5 text-gray-700">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-          <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-3.5 h-3.5 flex items-center justify-center">
-            3
-          </span>
-        </Link>
-        {!token ? (
-          <Link to="/login" className="bg-gray-900 text-white px-3 py-1.5 text-xs rounded-full">
-            Login
-          </Link>
-        ) : (
-          <Link to="/profile" className="bg-yellow-500 text-white px-3 py-1.5 text-xs rounded-full">
-            Profile
-          </Link>
-        )}
-      </div>
-    </div>
-
-    {/* Mobile Menu Dropdown */}
-    {isMenuOpen && (
-      <div className="md:hidden py-4 border-t border-gray-200 animate-slideDown">
-        <div className="flex flex-col space-y-2">
-          <MobileNavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</MobileNavLink>
-          <MobileNavLink to="/shop" onClick={() => setIsMenuOpen(false)}>Shop</MobileNavLink>
-          <MobileNavLink to="/deals" onClick={() => setIsMenuOpen(false)}>Deals</MobileNavLink>
-          <MobileNavLink to="/about" onClick={() => setIsMenuOpen(false)}>About</MobileNavLink>
-          <MobileNavLink to="/contact" onClick={() => setIsMenuOpen(false)}>Contact</MobileNavLink>
-        </div>
-      </div>
-    )}
-  </div>
-</nav>
+      </nav>
 
       {/* Hero Banner */}
       <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white overflow-hidden">
@@ -159,78 +169,71 @@ const Home = () => {
       </section>
 
       {/* Product Categories */}
-      <section className="py-12 sm:py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Shop by Category</h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600">Explore our wide range of premium products</p>
-          </div>
+<section className="py-12 sm:py-16 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-                </svg>
-              }
-              name="Audio"
-              count="120+"
-            />
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="7" />
-                  <polyline points="12 9 12 12 13.5 13.5" />
-                  <path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83" />
-                </svg>
-              }
-              name="Watches"
-              count="85+"
-            />
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-                  <line x1="12" y1="18" x2="12.01" y2="18" />
-                </svg>
-              }
-              name="Phones"
-              count="150+"
-            />
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                  <circle cx="12" cy="13" r="4" />
-                </svg>
-              }
-              name="Cameras"
-              count="60+"
-            />
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                  <line x1="8" y1="21" x2="16" y2="21" />
-                  <line x1="12" y1="17" x2="12" y2="21" />
-                </svg>
-              }
-              name="Computers"
-              count="95+"
-            />
-            <CategoryCard
-              icon={
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-              }
-              name="Electronics"
-              count="200+"
-            />
+    {/* Heading */}
+    <div className="text-center mb-8 sm:mb-12">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
+        Shop by Category
+      </h2>
+
+      <p className="text-sm sm:text-base md:text-lg text-gray-600">
+        Explore our wide range of premium products
+      </p>
+    </div>
+
+    {/* Categories Grid */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+
+      {categories.length > 0 ? (
+        categories.map((cat) => (
+          <div
+            key={cat.id}
+            className="bg-white rounded-xl p-4 shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
+          >
+
+            <div className="flex flex-col items-center text-center gap-3">
+
+              {/* Category Image */}
+              <img
+                src={cat.cateurl}
+                alt={cat.catename}
+                loading="lazy"
+                className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-full border-2 border-gray-200 group-hover:border-yellow-500 transition-all"
+              />
+
+              {/* Category Name */}
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                {cat.catename}
+              </h3>
+
+              {/* Category Description */}
+              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+                {cat.disc}
+              </p>
+
+            </div>
+
           </div>
-        </div>
-      </section>
+        ))
+      ) : (
+        // Loading Skeleton
+        [1,2,3,4,5,6].map((item) => (
+          <div key={item} className="bg-white rounded-xl p-4 shadow-sm animate-pulse">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-20 h-20 bg-gray-200 rounded-full"></div>
+              <div className="w-24 h-4 bg-gray-200 rounded"></div>
+              <div className="w-20 h-3 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        ))
+      )}
+
+    </div>
+
+  </div>
+</section>
 
       {/* Featured Products */}
       <section className="py-12 sm:py-16">
@@ -312,7 +315,6 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {/* Flash Sale */}
             <OfferCard
               bgColor="from-yellow-500 to-yellow-600"
               icon={
@@ -326,8 +328,6 @@ const Home = () => {
               buttonText="Shop Flash Sale"
               buttonColor="text-yellow-600"
             />
-
-            {/* Clearance Sale */}
             <OfferCard
               bgColor="from-gray-800 to-gray-900"
               icon={
@@ -342,8 +342,6 @@ const Home = () => {
               buttonText="View Clearance"
               buttonColor="text-gray-900"
             />
-
-            {/* Free Shipping */}
             <OfferCard
               bgColor="from-blue-500 to-blue-600"
               icon={
@@ -397,7 +395,6 @@ const Home = () => {
             />
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-16 pt-12 sm:pt-16 border-t border-gray-200">
             <div className="text-center">
               <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">50K+</div>
@@ -419,11 +416,10 @@ const Home = () => {
       <footer className="bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
-            {/* Brand Column */}
             <div className="text-center sm:text-left">
               <div className="flex justify-center sm:justify-start mb-4">
                 <img
-                  src="/Minimal 'VelmoraHub' Logo with Arrow Emblem.pdf"
+                  src="/Logo.png"
                   alt="Velmora Hub"
                   className="h-10 md:h-12 w-auto object-contain"
                 />
@@ -432,14 +428,13 @@ const Home = () => {
                 Your premium destination for quality products and exceptional shopping experience.
               </p>
               <div className="flex justify-center sm:justify-start space-x-4">
-                <SocialIcon href="#" />
+                <SocialIcon href="#" type="facebook" />
                 <SocialIcon href="#" type="twitter" />
                 <SocialIcon href="#" type="instagram" />
                 <SocialIcon href="#" type="youtube" />
               </div>
             </div>
 
-            {/* Company Column */}
             <div className="text-center sm:text-left">
               <h4 className="text-lg font-semibold mb-4 text-yellow-500">Company</h4>
               <ul className="space-y-2">
@@ -449,7 +444,6 @@ const Home = () => {
               </ul>
             </div>
 
-            {/* Support Column */}
             <div className="text-center sm:text-left">
               <h4 className="text-lg font-semibold mb-4 text-yellow-500">Support</h4>
               <ul className="space-y-2">
@@ -459,7 +453,6 @@ const Home = () => {
               </ul>
             </div>
 
-            {/* Legal Column */}
             <div className="text-center sm:text-left">
               <h4 className="text-lg font-semibold mb-4 text-yellow-500">Legal</h4>
               <ul className="space-y-2">
@@ -470,7 +463,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Newsletter */}
           <div className="border-t border-gray-800 mt-10 sm:mt-12 pt-10 sm:pt-12">
             <div className="text-center max-w-2xl mx-auto">
               <h4 className="text-lg sm:text-xl font-semibold mb-2">Subscribe to Our Newsletter</h4>
@@ -488,14 +480,12 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Copyright */}
           <div className="border-t border-gray-800 mt-10 sm:mt-12 pt-8 text-center text-gray-400 text-xs sm:text-sm">
             <p>© 2026 VelmoraHub. All rights reserved.</p>
           </div>
         </div>
       </footer>
 
-      {/* Animation Style */}
       <style jsx>{`
         @keyframes slideDown {
           from {
@@ -515,7 +505,7 @@ const Home = () => {
   );
 };
 
-// NavLink Component with Left-to-Right Underline
+// NavLink Component
 const NavLink = ({ to, children }) => (
   <Link
     to={to}
@@ -591,8 +581,7 @@ const ProductCard = ({ image, name, rating, reviews, price, originalPrice, badge
           <circle cx="20" cy="21" r="1" />
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
         </svg>
-        <span className="hidden xs:inline">Add to Cart</span>
-        <span className="xs:hidden">Cart</span>
+        Add to Cart
       </button>
     </div>
   </div>
@@ -689,41 +678,38 @@ const FooterLink = ({ href, children }) => (
 
 // Social Icon Component
 const SocialIcon = ({ href, type = "facebook" }) => {
-  const getIcon = () => {
-    switch(type) {
-      case "twitter":
-        return (
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
-          </svg>
-        );
-      case "instagram":
-        return (
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-          </svg>
-        );
-      case "youtube":
-        return (
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
-            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-          </svg>
-        );
-    }
+  const icons = {
+    facebook: (
+      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    ),
+    twitter: (
+      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+      </svg>
+    ),
+    instagram: (
+      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    ),
+    youtube: (
+      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+      </svg>
+    )
   };
 
   return (
-    <a href={href} className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-yellow-500 transition-colors duration-300">
-      {getIcon()}
+    <a
+      href={href}
+      className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-yellow-500 transition-colors duration-300"
+    >
+      {icons[type]}
     </a>
   );
 };
