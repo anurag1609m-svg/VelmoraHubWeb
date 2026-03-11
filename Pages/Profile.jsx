@@ -271,7 +271,8 @@ const Profile = () => {
                       type="text"
                       defaultValue={profile.role}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
-                    />
+                    disabled
+                   />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -279,6 +280,7 @@ const Profile = () => {
                       type="email"
                       defaultValue={profile.email}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
+                     disabled
                     />
                   </div>
                   <div>
